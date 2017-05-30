@@ -1,4 +1,5 @@
-import numpy.matlib
+
+import matplotlib.pyplot as plt
 import numpy as np
 
 """The function that computes the entries in the log-likelihood matrix"""
@@ -20,8 +21,10 @@ def mostLikelytransition(I_arr,logArr,logtransition):
     for j in xrange(len(I_arr)):
         for t in xrange(len(I_arr[j])) :
             if t+1<len(I_arr[j]):
-                I_arr[j][t+1]=np.argmax([row[t] for row in logArr] + [row[j] for row in logtransition])
-                print(I_arr[j][t+1])
+                l=np.array([row[t] for row in logArr])
+                log_a=np.array([row[j] for row in logtransition])
+                I_arr[j][t+1]=np.argmax(l+log_a)
+
     return I_arr
 
 
@@ -51,14 +54,14 @@ I_arr=mostLikelytransition(I_arr,logArr,logtransition)
 
 #Now we can compute the most likely sequence S*
 
-s_sequence=[0 for t in xrange(col)]
+s_sequence=[0 for t in xrange(10)]
 
 s_sequence[col-1]=np.argmax([row[col-1] for row in logArr]) #at time=T
-print("S* at time T is : %d" %s_sequence[col-1])
+
 for t in xrange(col-2,-1,-1):
     s_sequence[t]=I_arr[s_sequence[t+1]][t+1]
 
-#s_sequence=set(s_sequence)  #remove all repeated characters
 
-#for st in s_sequence:
-    #print(st)
+
+for st in s_sequence:
+    print(st)
